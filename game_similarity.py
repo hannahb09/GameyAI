@@ -7,21 +7,19 @@ model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # Load games JSON
 
-with open("games_list.json", "r", encoding="utf-8") as f:
+with open("rawg_games.json", "r", encoding="utf-8") as f:
     games = json.load(f)
-
 print("Creating embeddings for games...")
 
 # Create embeddings for each game
 
 for game in games:
     text = game["name"]
-    if "description" in game:
+    if game.get("description"):
         text += " " + game["description"]
     # Convert text to AI embedding
     game["embedding"] = model.encode(text)
-
-print("Embeddings created for", len(games), "games")
+print(f"Embeddings created for {len(games)} games")
 
 # Cosine similarity function
 
