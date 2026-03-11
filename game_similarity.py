@@ -1,15 +1,14 @@
 import json
-import numpy as np
-from sentence_transformers import SentenceTransformer
+import spacy
 
-# Load AI embedding model
-model = SentenceTransformer("all-MiniLM-L6-v2")
+# Load spaCy model
+nlp = spacy.load("en_core_web_md")
 
 # Load games JSON
 
 with open("rawg_games.json", "r", encoding="utf-8") as f:
     games = json.load(f)
-print("Creating embeddings for games...")
+print("Processing game descriptions...")
 
 # Create embeddings for each game
 
@@ -17,24 +16,19 @@ for game in games:
     text = game["name"]
     if game.get("description"):
         text += " " + game["description"]
-    # Convert text to AI embedding
-    game["embedding"] = model.encode(text)
-print(f"Embeddings created for {len(games)} games")
+    game["doc"] = nlp(text)
 
-# Cosine similarity function
+print(f"Processed {len(games)} games")
 
-def cosine_similarity(a, b):
-    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
 while True:
     idea = input("\nEnter your game idea (or 'quit'): ")
     if idea.lower() == "quit":
         break
-    # Convert idea to embedding
-    idea_embedding = model.encode(idea)
+    idea_doc = nlp(idea)
     results = []
     # Compare idea with every game
     for game in games:
-        similarity = cosine_similarity(idea_embedding, game["embedding"])
+        similarity = idea_doc.similarity(game["doc"])
         results.append({
             "name": game["name"],
             "platforms": game.get("platforms", []),
