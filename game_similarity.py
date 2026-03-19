@@ -1,5 +1,8 @@
 import json
 import spacy
+import streamlit as st
+import spacy_streamlit
+
 
 # Load spaCy model
 nlp = spacy.load("en_core_web_lg")
@@ -26,13 +29,12 @@ for game in games:
     text = (description * 2) + " " + game["name"]
     clean_text = preprocess(text)
     game["doc"] = nlp(clean_text)
+st.write(f"Processed {len(games)} games")
 
-print(f"Processed {len(games)} games")
+st.title("GameyAI - Game Similarity Checker")
+idea = st.text_area("Enter your game idea")
 
-while True:
-    idea = input("\nEnter your game idea (or 'quit'): ")
-    if idea.lower() == "quit":
-        break
+if st.button("Find Similar Games") and idea.strip() != "":
     idea_clean = preprocess(idea)
     idea_doc = nlp(idea_clean)
     results = []
@@ -46,8 +48,8 @@ while True:
         })
     # Sort best matches
     results = sorted(results, key=lambda x: x["similarity"], reverse=True)[:10]
-    print("\nTop 10 similar games:\n")
+    st.subheader("\nTop 10 similar games:\n")
     for r in results:
         platforms = ", ".join(r["platforms"]) if r["platforms"] else "N/A"
         percent = r["similarity"] * 100
-        print(f"{r['name']} ({platforms}) -> {percent:.2f}% similar")
+        st.write(f"{r['name']} ({platforms}) -> {percent:.2f}% similar")
