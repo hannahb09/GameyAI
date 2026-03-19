@@ -2,7 +2,16 @@ import json
 import spacy
 
 # Load spaCy model
-nlp = spacy.load("en_core_web_md")
+nlp = spacy.load("en_core_web_lg")
+
+# Function to clean text
+def preprocess(text):
+    doc = nlp(text.lower())
+    tokens = [
+        token.lemma_ for token in doc
+        if not token.is_stop and not token.is_punct
+    ]
+    return " ".join(tokens)
 
 # Load games JSON
 
@@ -13,10 +22,10 @@ print("Processing game descriptions...")
 # Create embeddings for each game
 
 for game in games:
-    text = game["name"]
-    if game.get("description"):
-        text += " " + game["description"]
-    game["doc"] = nlp(text)
+    description = game.get("description", "")
+    text = (description * 2) + " " + game["name"]
+    clean_text = preprocess(text)
+    game["doc"] = nlp(clean_text)
 
 print(f"Processed {len(games)} games")
 
@@ -24,7 +33,8 @@ while True:
     idea = input("\nEnter your game idea (or 'quit'): ")
     if idea.lower() == "quit":
         break
-    idea_doc = nlp(idea)
+    idea_clean = preprocess(idea)
+    idea_doc = nlp(idea_clean)
     results = []
     # Compare idea with every game
     for game in games:
