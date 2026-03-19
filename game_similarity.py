@@ -34,7 +34,7 @@ st.write(f"Processed {len(games)} games")
 st.title("GameyAI - Game Similarity Checker")
 idea = st.text_area("Enter your game idea")
 
-if st.button("Find Similar Games") and idea.strip() != "":
+if st.button("Find Similar Games") and idea.strip():
     idea_clean = preprocess(idea)
     idea_doc = nlp(idea_clean)
     results = []
@@ -48,7 +48,7 @@ if st.button("Find Similar Games") and idea.strip() != "":
         })
     # Sort best matches
     results = sorted(results, key=lambda x: x["similarity"], reverse=True)[:10]
-    st.subheader("\nTop 10 similar games:\n")
+    st.subheader("Top 10 similar games:")
     for r in results:
         platforms = ", ".join(r["platforms"]) if r["platforms"] else "N/A"
         percent = r["similarity"] * 100
