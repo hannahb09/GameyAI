@@ -1,7 +1,6 @@
 import json
 import spacy
 import streamlit as st
-import spacy_streamlit
 
 
 # Load spaCy model
@@ -20,7 +19,7 @@ def preprocess(text):
 
 with open("rawg_games.json", "r", encoding="utf-8") as f:
     games = json.load(f)
-print("Processing game descriptions...")
+st.write("Processing game descriptions...")
 
 # Create embeddings for each game
 
