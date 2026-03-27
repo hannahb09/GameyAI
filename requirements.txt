@@ -1,2 +1,5 @@
 streamlit
 spacy==3.6.1
+numpy==1.26.4
+thinc==8.1.12
+requests
