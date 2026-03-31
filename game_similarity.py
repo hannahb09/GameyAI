@@ -2,7 +2,6 @@ import json
 import spacy
 import streamlit as st
 
-
 # Load spaCy model
 nlp = spacy.load("en_core_web_sm")
 doc = nlp("This is a sentence.")
