@@ -3,4 +3,4 @@ spacy==3.6.1
 numpy==1.26.4
 thinc==8.1.12
 requests==2.31.0
-conda install spacy-model-en_core_web_sm
+python -m spacy download en_core_web_sm
