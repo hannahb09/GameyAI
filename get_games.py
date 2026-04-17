@@ -1,10 +1,14 @@
 import requests
 import json
 import time
+from dotenv import load_dotenv
+import os
 
-# RAWG API base URL
+load_dotenv()
 BASE_URL = "https://api.rawg.io/api/games"
-API_KEY = "f098286ad1a045f1a00a3023aea4de01" 
+API_KEY = os.getenv("RAWG_API_KEY")
+print(API_KEY)
+
 games = []
 page = 1
 TOTAL_PAGES = 5
