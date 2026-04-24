@@ -14,7 +14,7 @@ page = 1
 TOTAL_PAGES = 5
 
 while page <= TOTAL_PAGES:
-    url = f"{BASE_URL}?key={API_KEY}&page={page}&page_size=100"
+    url = f"{BASE_URL}?key={API_KEY}&page={page}&page_size=40"
     response = requests.get(url)
     if response.status_code != 200:
         print("Request failed:", response.status_code)
@@ -27,21 +27,21 @@ while page <= TOTAL_PAGES:
             "description": "",
             "platforms": [p["platform"]["name"] for p in game.get("platforms", [])]
         })
-        print(f"Page {page} done, total games collected: {len(games)}")
-        page += 1
-        time.sleep(1)
+    print(f"Page {page} done, total games collected: {len(games)}")
+    page += 1
+    time.sleep(1)
     
-    for i, game in enumerate(games):
-        url = f"{BASE_URL}/{game['slug']}?key={API_KEY}"
-        response = requests.get(url)
-        if response.status_code == 200:
-            data = response.json()
-            game["description"] = data.get("description_raw", "")
-        else:
-            print(f"Failed to get description for {game['name']}")
-        if (i + 1) % 50 == 0:
-            print(f"Fetched descriptions for {i + 1} games")
-        time.sleep(0.5)
+for i, game in enumerate(games):
+    url = f"{BASE_URL}/{game['slug']}?key={API_KEY}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        game["description"] = data.get("description_raw", "")
+    else:
+        print(f"Failed to get description for {game['name']}")
+    if (i + 1) % 50 == 0:
+        print(f"Fetched descriptions for {i + 1} games")
+    time.sleep(0.5)
 
 # Save to JSON
 with open("rawg_games.json", "w", encoding="utf-8") as f:
